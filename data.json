@@ -8417,6 +8417,50 @@
          "html": "부천시청 · 학생시절 상비군: 2011·2014 남중2·5기(동두천중·김포제일고) [신규]"
         }
        ]
+      },
+      {
+       "name": "정형준",
+       "school": "청주시청",
+       "cells": [
+        {
+         "class": "pn_",
+         "html": "정형준 <span class=\"tag tw_\">춘계 실업 우승</span>"
+        },
+        {
+         "class": "sch",
+         "html": "청주시청"
+        },
+        {
+         "class": "",
+         "html": "<div class=\"tk\"><span class=\"yw\">춘계 전국실업검도대회 통합부 개인전 결승 연장승(박현준전, 1점 한판승) — 우승 🏆</span></div>"
+        },
+        {
+         "class": "note",
+         "html": "청주시청 · 40번 · 최근 경기 반영 [차장님 확인]"
+        }
+       ]
+      },
+      {
+       "name": "박현준",
+       "school": "창원시청",
+       "cells": [
+        {
+         "class": "pn_",
+         "html": "박현준"
+        },
+        {
+         "class": "sch",
+         "html": "창원시청"
+        },
+        {
+         "class": "",
+         "html": "<div class=\"tk\"><span class=\"yr\">춘계 전국실업검도대회 통합부 개인전 결승 연장패(정형준전) · 준우승</span></div>"
+        },
+        {
+         "class": "note",
+         "html": "창원시청 · 4번 · 최근 경기 반영 [차장님 확인]"
+        }
+       ]
       }
      ],
      "extra_html": ""
@@ -16275,6 +16319,28 @@
     "real",
     0,
     22
+   ]
+  },
+  {
+   "name": "정형준",
+   "school": "청주시청",
+   "panel": "real",
+   "section": "주요 선수 — 성적 기준 정리",
+   "ref": [
+    "real",
+    0,
+    23
+   ]
+  },
+  {
+   "name": "박현준",
+   "school": "창원시청",
+   "panel": "real",
+   "section": "주요 선수 — 성적 기준 정리",
+   "ref": [
+    "real",
+    0,
+    24
    ]
   },
   {
