@@ -12344,7 +12344,7 @@
        ]
       }
      ],
-     "extra_html": "<div style=\"margin-top:8px;padding:8px 12px;background:rgba(224,85,85,0.08);border:1px solid var(--border);border-radius:3px;font-size:11px;color:var(--text2);line-height:1.8;\">\n      ⚠️ <strong style=\"color:#ff8a8a\">한국 비교 결과</strong> · 단체전 남녀 모두 결승에서 한국과 맞대결 → 4-0 동일 스코어로 일본 완승<br/>\n      · 23개국·지역 270여명 참가 · 한국 다음 세계대회(20WKC, 2027) 앞두고 일본과의 격차가 단체전에서 재확인됨\n    </div>"
+     "extra_html": "<div style=\"margin-top:8px;padding:8px 12px;background:rgba(224,85,85,0.08);border:1px solid var(--border);border-radius:3px;font-size:11px;color:var(--text2);line-height:1.8;\">\n      ⚠️ <strong style=\"color:var(--red-hl)\">한국 비교 결과</strong> · 단체전 남녀 모두 결승에서 한국과 맞대결 → 4-0 동일 스코어로 일본 완승<br/>\n      · 23개국·지역 270여명 참가 · 한국 다음 세계대회(20WKC, 2027) 앞두고 일본과의 격차가 단체전에서 재확인됨\n    </div>"
     },
     {
      "type": "table",
@@ -12476,7 +12476,7 @@
      "badge_cls": "sb sb-jp",
      "badge_text": "🇯🇵 일본 — WKC 참고",
      "heading": "세계검도선수권대회(WKC) 한·일 비교",
-     "html": "<div style=\"padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:3px;font-size:11px;color:var(--text2);line-height:1.9;\">\n      📌 <strong style=\"color:var(--gold)\">19WKC(2024·밀라노) 단체전 구도</strong><br/>\n      · 한국 남자 단체전: 2013년 13WKC(대만) 최초 우승 이후, 이후 대회들에서 일본에 우승을 내주고 <span style=\"color:#ff8a8a\">준우승</span> 흐름 지속<br/>\n      · 19WKC 일본 측 선수단: 2022년 여름부터 남녀 각 30명 후보군으로 강화훈련 시작 → 최종 10명씩 선발 (개별 선수 명단은 공식 자료 미확인)<br/>\n      · 한국 19WKC 대표: 남녀 각 10명, 단장 이안수·총감독 박학진<br/><br/>\n      ⚠️ <strong>데이터 부재</strong>: 일본 19WKC 출전 선수 개인 명단은 검색 결과에서 확인되지 않음 — 1AOKC(2026) 단체전 멤버(오히라·키무라·다카하시·토야마 등)는 위 표 참고\n    </div>"
+     "html": "<div style=\"padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:3px;font-size:11px;color:var(--text2);line-height:1.9;\">\n      📌 <strong style=\"color:var(--gold)\">19WKC(2024·밀라노) 단체전 구도</strong><br/>\n      · 한국 남자 단체전: 2013년 13WKC(대만) 최초 우승 이후, 이후 대회들에서 일본에 우승을 내주고 <span style=\"color:var(--red-hl)\">준우승</span> 흐름 지속<br/>\n      · 19WKC 일본 측 선수단: 2022년 여름부터 남녀 각 30명 후보군으로 강화훈련 시작 → 최종 10명씩 선발 (개별 선수 명단은 공식 자료 미확인)<br/>\n      · 한국 19WKC 대표: 남녀 각 10명, 단장 이안수·총감독 박학진<br/><br/>\n      ⚠️ <strong>데이터 부재</strong>: 일본 19WKC 출전 선수 개인 명단은 검색 결과에서 확인되지 않음 — 1AOKC(2026) 단체전 멤버(오히라·키무라·다카하시·토야마 등)는 위 표 참고\n    </div>"
     }
    ]
   }
