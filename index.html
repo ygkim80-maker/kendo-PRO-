@@ -834,7 +834,14 @@ function kdLoadData(){
     var counts = {};
     ['elem','mid','hi','univ','real','natl'].forEach(function(id){
       var sum = 0;
-      if(panels[id]){ panels[id].sections.forEach(function(s){ if(s.type === 'table') sum += s.rows.length; }); }
+      if(panels[id]){
+        panels[id].sections.forEach(function(s){
+          if(s.type !== 'table') return;
+          // natl 패널의 "OO 입상자" 섹션은 대회 성적 기록일 뿐 국가대표·상비군 신분이 아니므로 홈 통계에서 제외
+          if(id === 'natl' && s.heading && s.heading.indexOf('입상자') > -1) return;
+          sum += s.rows.length;
+        });
+      }
       counts[id] = sum;
     });
     renderHome(data, panels, counts);
