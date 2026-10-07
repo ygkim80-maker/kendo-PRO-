@@ -19,6 +19,8 @@ spec.json 형식 (두 블록 모두 선택):
 }
   "notes": [{"name":"배성진","school":"대구대","text":"대구대 에이스 [차장님 현장정보]"}]   # note 칸에 ' · 문구' 추가(중복 시 생략)
 - school 은 부분일치(제주→제주대). 동명이인/중복 행이면 "ref":["panel",섹션,행] 으로 지정.
+- 신규 선수만 등록하려면 entries 에 text 없이 {"name","school","create":{...}} 만 둔다. teams 항목의 팀별 "cls" 로 칩 색상 지정 가능(기본 yw).
+- teams 항목의 팀별 "notop": true 이면 칩을 기록으로만 남기고 TOP7 집계에서 제외(data-top="0").
 - cls: yw(입상·승) / yt(참가·중립) / yr(패).  동일 텍스트 칩은 중복 추가하지 않음.
 - 선수를 못 찾고 create 도 없으면 아무것도 쓰지 않고 중단(오타 방지).
 """
@@ -67,12 +69,13 @@ def apply_chip(e, text):
     r = get_row(ref)
     ci = next(i for i, c in enumerate(r['cells']) if '"tk"' in c.get('html', ''))
     html = r['cells'][ci]['html']
-    chip = f'<span class="{e.get("cls","yw")}">{text}</span>'
+    attr = ' data-top="0"' if e.get('notop') else ''   # TOP7 집계 제외 칩
+    chip = f'<span class="{e.get("cls","yw")}"{attr}>{text}</span>'
     if chip in html:
         log['skipped'] += 1
     else:
         key = e.get('replace')
-        pat = re.compile(r'<span class="y[wtr]">[^<]*' + re.escape(key) + r'[^<]*</span>') if key else None
+        pat = re.compile(r'<span class="y[wtr]"[^>]*>[^<]*' + re.escape(key) + r'[^<]*</span>') if key else None
         if pat and pat.search(html):
             html = pat.sub(lambda m: chip, html, count=1); log['replaced'] += 1
         else:
@@ -88,6 +91,8 @@ def apply_chip(e, text):
 
 ev = spec.get('event', '')
 for e in spec.get('entries', []):
+    if 'text' not in e:      # 선수 신규 등록만(칩 없음)
+        resolve(e); continue
     apply_chip(e, (ev + ' ' if ev and not e.get('no_event') else '') + e['text'])
 
 for t in spec.get('teams', []):
@@ -100,7 +105,7 @@ for t in spec.get('teams', []):
             score = '' if out == '무' else f' {mp}:{op}'
             text = (f"{ev} {t['stage']} {team['result']}({vs} 상대" + (f", {team['summary']}" if team.get('summary') else '') +
                     f") · {pos} {op_name}전{score} {out}")
-            e = {'name': me, 'school': sch, 'cls': 'yw', 'replace': t.get('replace', t['stage'])}
+            e = {'name': me, 'school': sch, 'cls': team.get('cls', 'yw'), 'notop': team.get('notop'), 'replace': t.get('replace', t['stage'])}
             if team['result'] == '우승' and t.get('tag'): e['tag'] = t['tag']
             else:
                 if t.get('tag'): e['untag'] = t['tag']
