@@ -10,6 +10,7 @@ panels = {p['id']: p for p in d['panels']}
 def count_placements(html):
     if not html: return 0,0,0
     html = re.sub(r'<span class="y[wtr]" data-top="0">.*?</span>', '', html)  # 집계 제외 칩
+    html = re.sub(r'· (?:선봉|2위|3위|중견|5위|부장|주장) [가-힣]+전', '', html)  # 단체전 오더 순서("3위 ○○전")는 입상 아님
     champ = len(re.findall(r'(?<!준)우승', html))
     runner = len(re.findall(r'준우승', html))
     third = len(re.findall(r'(?:공동\s*)?3위|4위', html))
