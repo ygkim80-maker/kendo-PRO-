@@ -4244,7 +4244,7 @@
        "cells": [
         {
          "class": "pn_",
-         "html": "김남현"
+         "html": "김남현 <span class=\"tag tw_\">관심선수</span>"
         },
         {
          "class": "sch",
@@ -4288,7 +4288,7 @@
        "cells": [
         {
          "class": "pn_",
-         "html": "김도언"
+         "html": "김도언 <span class=\"tag tw_\">관심선수</span>"
         },
         {
          "class": "sch",
@@ -4508,7 +4508,7 @@
        "cells": [
         {
          "class": "pn_",
-         "html": "김도원 <span class=\"tag tg_\">신동</span> <span class=\"tag tw_\">대학 상비군</span> <span class=\"tag tw_\">회장기 단체전 우승</span> <span class=\"tag tw_\">대학 국가대표 상비군</span> <span class=\"tag tw_\">상비군 2회 선발</span>"
+         "html": "김도원 <span class=\"tag tg_\">신동</span> <span class=\"tag tw_\">대학 상비군</span> <span class=\"tag tw_\">회장기 단체전 우승</span> <span class=\"tag tw_\">대학 국가대표 상비군</span> <span class=\"tag tw_\">상비군 2회 선발</span> <span class=\"tag tw_\">관심선수</span>"
         },
         {
          "class": "sch",
@@ -5491,7 +5491,7 @@
        "cells": [
         {
          "class": "pn_",
-         "html": "동원겸 <span class=\"tag tw_\">대학 상비군</span> <span class=\"tag tw_\">대구대총장기 우승</span>"
+         "html": "동원겸 <span class=\"tag tw_\">대학 상비군</span> <span class=\"tag tw_\">대구대총장기 우승</span> <span class=\"tag tw_\">관심선수</span>"
         },
         {
          "class": "sch",
@@ -8130,7 +8130,7 @@
        "cells": [
         {
          "class": "pn_",
-         "html": "조진용 <span class=\"tag tw_\">국대주장</span> <span class=\"tag tw_\">최장계보</span> <span class=\"tag tw_\">중고 상비군 1회 선발</span>"
+         "html": "조진용 <span class=\"tag tw_\">국대주장</span> <span class=\"tag tw_\">최장계보</span> <span class=\"tag tw_\">중고 상비군 1회 선발</span> <span class=\"tag tw_\">관심선수</span>"
         },
         {
          "class": "sch",
@@ -8262,7 +8262,7 @@
        "cells": [
         {
          "class": "pn_",
-         "html": "김상준 <span class=\"tag tg_\">신성</span> <span class=\"tag tw_\">4회상비군</span> <span class=\"tag tw_\">중고 상비군 4회 선발</span> <span class=\"tag tw_\">국가대표 선발</span>"
+         "html": "김상준 <span class=\"tag tg_\">신성</span> <span class=\"tag tw_\">4회상비군</span> <span class=\"tag tw_\">중고 상비군 4회 선발</span> <span class=\"tag tw_\">국가대표 선발</span> <span class=\"tag tw_\">관심선수</span>"
         },
         {
          "class": "sch",
@@ -8284,7 +8284,7 @@
        "cells": [
         {
          "class": "pn_",
-         "html": "권오규 <span class=\"tag tg_\">신성</span> <span class=\"tag tw_\">3회상비군</span> <span class=\"tag tw_\">중고 상비군 3회 선발</span> <span class=\"tag tw_\">국가대표 선발</span>"
+         "html": "권오규 <span class=\"tag tg_\">신성</span> <span class=\"tag tw_\">3회상비군</span> <span class=\"tag tw_\">중고 상비군 3회 선발</span> <span class=\"tag tw_\">국가대표 선발</span> <span class=\"tag tw_\">관심선수</span>"
         },
         {
          "class": "sch",
@@ -8895,7 +8895,7 @@
        "cells": [
         {
          "class": "pn_",
-         "html": "조진용"
+         "html": "조진용 <span class=\"tag tw_\">관심선수</span>"
         },
         {
          "class": "sch",
@@ -9051,7 +9051,7 @@
        "cells": [
         {
          "class": "pn_",
-         "html": "권오규 <span class=\"tag tg_\">신성</span> <span class=\"tag tw_\">국가대표 선발</span>"
+         "html": "권오규 <span class=\"tag tg_\">신성</span> <span class=\"tag tw_\">국가대표 선발</span> <span class=\"tag tw_\">관심선수</span>"
         },
         {
          "class": "sch",
@@ -9077,7 +9077,7 @@
        "cells": [
         {
          "class": "pn_",
-         "html": "김상준 <span class=\"tag tg_\">신성</span> <span class=\"tag tw_\">국가대표 선발</span>"
+         "html": "김상준 <span class=\"tag tg_\">신성</span> <span class=\"tag tw_\">국가대표 선발</span> <span class=\"tag tw_\">관심선수</span>"
         },
         {
          "class": "sch",
@@ -9657,7 +9657,7 @@
        "cells": [
         {
          "class": "pn_",
-         "html": "조진용 <span class=\"tag tw_\">주장</span>"
+         "html": "조진용 <span class=\"tag tw_\">주장</span> <span class=\"tag tw_\">관심선수</span>"
         },
         {
          "class": "sch",
@@ -9723,7 +9723,7 @@
        "cells": [
         {
          "class": "pn_",
-         "html": "김상준"
+         "html": "김상준 <span class=\"tag tw_\">관심선수</span>"
         },
         {
          "class": "sch",
@@ -9745,7 +9745,7 @@
        "cells": [
         {
          "class": "pn_",
-         "html": "권오규"
+         "html": "권오규 <span class=\"tag tw_\">관심선수</span>"
         },
         {
          "class": "sch",
