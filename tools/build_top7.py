@@ -16,6 +16,17 @@ def count_placements(html):
     third = len(re.findall(r'(?:공동\s*)?3위|4위', html))
     return champ, runner, third
 
+# 해당 부(部) 기록만 집계: 하위 단계(초·중·고·대학 시절) 기록을 담은 칩은 제외 (차장님 지시: "대학부면 대학기록만")
+_ELEM = r'초등|초[1-6](?![가-힣])'
+_MID = _ELEM + r'|중학|남중|여중|중[1-3](?![가-힣])'
+_HI = _MID + r'|고등|남고|여고|고[1-3](?![가-힣])|청소년'
+LOWER = {'elem': None, 'mid': _ELEM, 'hi': _MID, 'univ': _HI, 'real': _HI + r'|대학'}
+
+def drop_lower(tk_html, panel_id):
+    pat = LOWER.get(panel_id)
+    if not pat: return tk_html
+    return re.sub(r'<span class="y[wtr]"[^>]*>(?:(?!</span>).)*?(?:%s)(?:(?!</span>).)*?</span>' % pat, '', tk_html)
+
 def strip_tags(s):
     return re.sub(r'</?span[^>]*>', '', s).strip()
 
@@ -48,7 +59,7 @@ def build(panel_id, section_idxs, exclude=(), only_female=None):
             if r['name'] in exclude: continue
             if only_female is True and not is_female(r): continue
             if only_female is False and is_female(r): continue
-            tk_html = ''.join(c['html'] for c in r['cells'] if c['class']=='' and '"tk"' in c.get('html',''))
+            tk_html = drop_lower(''.join(c['html'] for c in r['cells'] if c['class']=='' and '"tk"' in c.get('html','')), panel_id)
             champ, runner, third = count_placements(tk_html)
             rows.append({'name': r['name'], 'school': r.get('school',''), 'champ':champ,'runner':runner,'third':third,'total':champ+runner+third,'tk':tk_html})
     agg = collections.OrderedDict()
@@ -136,7 +147,8 @@ full_html = '<div class="t3grid">\n' + full_html + '\n</div>'
 # wrap with note
 note = ('<div style="margin-top:8px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);'
         'border-radius:3px;font-size:11px;color:var(--text2);line-height:1.8;">'
-        '📌 <strong style="color:var(--gold)">TOP7 산정 기준</strong> · DB에 누적된 전체 대회 기록 중 우승·준우승·3위 언급 횟수를 합산해 순위화(단순 최근 성적 아님)<br/>'
+        '📌 <strong style="color:var(--gold)">TOP7 산정 기준</strong> · 해당 부 기록만 누적 집계(대학부는 대학 기록만, 초·중·고 시절 기록 제외) · 우승·준우승·개인전 3위 횟수 합산(최근 성적만 보는 것 아님)<br/>'
+        '· 학년별 부문(초등부 제외)·2부·동아리부 성적과 단체전 3위는 집계 제외<br/>'
         '· 동률일 경우 우승 → 준우승 횟수 순으로 세분류<br/>'
         '· 초등부는 기록 유무와 관계없이 현장 평가를 반영해 표기, 대학부 여자는 여대 국가대표상비군 명단 등 확인된 선수 기준<br/>'
         '⚠️ 대회 등급(전국대회 vs 지역대회)을 반영하지 않은 단순 횟수 기준입니다'
