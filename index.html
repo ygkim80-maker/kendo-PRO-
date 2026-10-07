@@ -459,6 +459,10 @@ mark.sm{background:var(--tag-gold);color:#111;padding:0 2px;border-radius:2px;fo
       </div>
       <div class="sec-title"><h2>2026 세대별 TOP7</h2></div>
       <div id="homeTop3"></div>
+      <div class="sec-title"><h2>관심선수</h2></div>
+      <div id="homeFav"></div>
+      <div class="sec-title"><h2>국대 유망주</h2></div>
+      <div id="homeProspect"></div>
       <div class="sec-title"><h2>현장 브리핑</h2></div>
       <div id="homeBrief"></div>
       <div class="footer-note" id="footerNote"></div>
@@ -659,6 +663,8 @@ function renderHome(data, panels, counts){
 
   var ov = panels['ov'];
   if(ov && ov.sections[0]){ document.getElementById('homeTop3').innerHTML = ov.sections[0].html; }
+  if(ov && ov.sections[1]){ document.getElementById('homeFav').innerHTML = ov.sections[1].html; }
+  if(ov && ov.sections[2]){ document.getElementById('homeProspect').innerHTML = ov.sections[2].html; }
 
   var brief = panels['pl'] ? findSection(panels['pl'], '당분간 상위권') : null;
   document.getElementById('homeBrief').innerHTML = brief ? brief.html : '';

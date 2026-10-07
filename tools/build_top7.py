@@ -156,9 +156,90 @@ note = ('<div style="margin-top:8px;padding:8px 12px;background:var(--bg2);borde
 
 full_html = full_html + note
 
+
+# ===== 홈 추가 섹션: 관심선수 / 국대 유망주 =====
+def cell_text(r): return re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', ' '.join(c['html'] for c in r['cells']))).strip()
+
+def national_names():
+    names = set()
+    for si in range(3):  # 19WKC 남·여 국가대표, 2026 AOKC 대표팀
+        for r in panels['natl']['sections'][si]['rows']:
+            names.add(strip_tags(r['cells'][0]['html']).split()[0])
+    return names
+
+def tags_of(r):
+    return [strip_tags(t) for t in re.findall(r'<span class="tag [^"]*">(.*?)</span>', r['cells'][0]['html'])]
+
+def short_chip(s):
+    s = re.sub(r' · (?:선봉|2위|3위|중견|5위|부장|주장) .*$', '', s)
+    s = re.sub(r'\((?:[^()]*상대[^()]*|[^()]*다득점[^()]*)\)', '', s)
+    return s.replace('전국대학검도대회 ', '').replace('남자1부 ', '').strip()
+
+def simple_block(cls, title, items):
+    rows = []
+    for name, school, line in items:
+        rows.append(
+            '<div class="t3row">\n<div class="t3rank r3">★</div>\n<div class="t3body">\n'
+            f'<div class="t3name">{name}</div>\n<div class="t3org">{fmt_school(school)}</div>\n'
+            f'<div class="t3ev">{line}</div>\n</div>\n</div>')
+    return f'<div class="t3block">\n<div class="t3head {cls}">{title} ({len(items)}명)</div>\n' + '\n'.join(rows) + '\n</div>'
+
+ORDER = ['elem', 'mid', 'hi', 'univ', 'real']
+def first_rows_by_name():
+    """이름별 대표 행(tk 칩이 있는 non-natl 행 중 가장 앞 행)"""
+    out = collections.OrderedDict()
+    for pid in ORDER:
+        for sec in panels[pid]['sections']:
+            for r in sec.get('rows', []):
+                if not any('"tk"' in c.get('html', '') for c in r['cells']): continue
+                out.setdefault(r['name'], (pid, r))
+    return out
+
+rows_by_name = first_rows_by_name()
+
+# 관심선수: 이름 셀에 '관심선수' 태그가 붙은 선수
+fav_items = []
+for name, (pid, r) in rows_by_name.items():
+    tg = tags_of(r)
+    if '관심선수' not in tg: continue
+    tk_html = ''.join(c['html'] for c in r['cells'] if '"tk"' in c.get('html', ''))
+    hl = [short_chip(x) for x in highlights(re.sub(r'<span class="y[wtr]" data-top="0">.*?</span>', '', tk_html), 2)]
+    tagline = ' · '.join(t for t in tg if t != '관심선수')
+    line = '<br/>'.join(x for x in ['<strong>' + ' · '.join(hl[:1]) + '</strong>' if hl else '', hl[1] if len(hl) > 1 else '', ('<span style="color:var(--text3)">' + tagline + '</span>') if tagline else ''] if x)
+    fav_items.append((pid, name, r.get('school', ''), line or '기록 확인 중'))
+fav_items.sort(key=lambda x: (ORDER.index(x[0]), x[1]))
+fav_html = '<div class="t3grid">\n' + simple_block('t3-real', '⭐ 관심선수', [(n, sc, ln) for _, n, sc, ln in fav_items]) + '\n</div>'
+
+# 국대 유망주: 국가대표 상비군(대학 10월 선발 / 2026 청소년대표 상비군) 중 아직 국가대표 명단에 없는 현역
+nat = national_names()
+prospects = {'univ': [], 'hi': []}
+for name, (pid, r) in rows_by_name.items():
+    if name in nat: continue
+    txt = cell_text(r)
+    tg = tags_of(r)
+    if pid == 'univ' and '대학 국가대표 상비군' in tg:
+        extra = [t for t in tg if t in ('상비군 2회 선발',) or t.startswith('중고 상비군')]
+        sel = ' · '.join(extra) if extra else '2026.10 대학 국가대표 상비군 선발'
+        prospects['univ'].append((name, r.get('school', ''), '2026.10 대학 국가대표 상비군' + ((' · ' + sel) if extra else '')))
+    elif pid == 'hi' and re.search(r'2026[^가-힣]{0,3}(청소년대표|상비군)|2026 상비군|2026 청소년대표', txt):
+        yrs = '2년 연속(2025·2026)' if re.search(r'2년\s?연속|2025·2026', txt) else '2026'
+        prospects['hi'].append((name, r.get('school', ''), f'청소년대표 상비군 {yrs}'))
+for k in prospects: prospects[k].sort(key=lambda x: ('2년' not in x[2], x[0]))
+pro_html = '<div class="t3grid">\n' + '\n'.join(
+    [simple_block('t3-univ', '🟥 대학 국가대표 상비군', prospects['univ']),
+     simple_block('t3-hi', '🟩 고등 청소년대표 상비군', prospects['hi'])]) + '\n</div>' + (
+    '<div style="margin-top:8px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:3px;font-size:11px;color:var(--text2);line-height:1.8;">'
+    '📌 <strong style="color:var(--gold)">국대 유망주 기준</strong> · 국가대표 상비군(대학 2026.10 선발, 고등 2026 청소년대표 상비군)에 선발됐으나 국가대표 명단(19WKC·AOKC)에는 아직 없는 현역 선수'
+    '</div>')
+
 d2 = json.load(open(PATH))
 panels2 = {p['id']: p for p in d2['panels']}
 panels2['ov']['sections'][0]['html'] = full_html
+ov_secs = panels2['ov']['sections']
+for i, (heading, html) in enumerate([('관심선수', fav_html), ('국대 유망주', pro_html)], start=1):
+    sec = {'type': 'raw', 'badge_cls': None, 'badge_text': None, 'heading': heading, 'html': html}
+    if len(ov_secs) > i: ov_secs[i] = sec
+    else: ov_secs.append(sec)
 with open(PATH, 'w') as f:
     json.dump(d2, f, ensure_ascii=False, indent=1)
     f.write('\n')
