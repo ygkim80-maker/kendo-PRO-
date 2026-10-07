@@ -17,6 +17,7 @@ spec.json 형식 (두 블록 모두 선택):
      "bouts":[["선봉","오윤근","대전대",1,"원유제","대구대",0], ...]}   # [순서, A이름, A학교, A득점, B이름, B학교, B득점]
   ]
 }
+  "notes": [{"name":"배성진","school":"대구대","text":"대구대 에이스 [차장님 현장정보]"}]   # note 칸에 ' · 문구' 추가(중복 시 생략)
 - school 은 부분일치(제주→제주대). 동명이인/중복 행이면 "ref":["panel",섹션,행] 으로 지정.
 - cls: yw(입상·승) / yt(참가·중립) / yr(패).  동일 텍스트 칩은 중복 추가하지 않음.
 - 선수를 못 찾고 create 도 없으면 아무것도 쓰지 않고 중단(오타 방지).
@@ -106,6 +107,15 @@ for t in spec.get('teams', []):
             for k in ('create', 'ref'):
                 pass
             apply_chip(e, text)
+
+for n in spec.get('notes', []):
+    ref = resolve(n)
+    if ref is None: continue
+    r = get_row(ref); c = r['cells'][-1]
+    assert c['class'] == 'note', n
+    if n['text'] in c['html']: log['skipped'] += 1
+    else:
+        c['html'] = (c['html'] + ' · ' if c['html'] else '') + n['text']; log['added'] += 1
 
 if errors:
     print('중단(저장 안 함):'); [print(' -', x) for x in errors]; sys.exit(1)
