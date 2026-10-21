@@ -61,10 +61,11 @@ def build(panel_id, section_idxs, exclude=(), only_female=None):
             if only_female is False and is_female(r): continue
             tk_html = drop_lower(''.join(c['html'] for c in r['cells'] if c['class']=='' and '"tk"' in c.get('html','')), panel_id)
             champ, runner, third = count_placements(tk_html)
-            rows.append({'name': r['name'], 'school': r.get('school',''), 'champ':champ,'runner':runner,'third':third,'total':champ+runner+third,'tk':tk_html})
+            homonym = '동명이인' in ''.join(c['html'] for c in r['cells'] if c['class']=='note')
+            rows.append({'key': r['name'] + ('@' + r.get('school','') if homonym else ''), 'name': r['name'], 'school': r.get('school',''), 'champ':champ,'runner':runner,'third':third,'total':champ+runner+third,'tk':tk_html})
     agg = collections.OrderedDict()
     for r in rows:
-        k = r['name']
+        k = r['key']
         if k not in agg: agg[k]=dict(r)
         else:
             for f in ['champ','runner','third','total']: agg[k][f]+=r[f]
