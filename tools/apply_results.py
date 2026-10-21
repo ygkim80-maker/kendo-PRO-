@@ -19,6 +19,7 @@ spec.json 형식 (두 블록 모두 선택):
 }
   "notes": [{"name":"배성진","school":"대구대","text":"대구대 에이스 [차장님 현장정보]"}]   # note 칸에 ' · 문구' 추가(중복 시 생략)
 - spec 최상위 "skip_missing": true 이면 DB에 없거나 동명이인인 선수는 건너뛰고(중단 안 함) 마지막에 목록 출력. teams 의 팀별 "label"(시도명 등 표기)·"lookup"(DB 소속 검색어, ""이면 이름만으로 검색).
+- spec 최상위 "skip_names": [이름,…] 은 해당 이름 선수를 무조건 건너뜀(동명이인 오반영 방지).
 - school 은 부분일치(제주→제주대). 동명이인/중복 행이면 "ref":["panel",섹션,행] 으로 지정.
 - 신규 선수만 등록하려면 entries 에 text 없이 {"name","school","create":{...}} 만 둔다. teams 항목의 팀별 "cls" 로 칩 색상 지정 가능(기본 yw).
 - teams 항목의 팀별 "notop": true 이면 칩을 기록으로만 남기고 TOP7 집계에서 제외(data-top="0").
@@ -45,6 +46,8 @@ def has_tk(ref):
 def resolve(e):
     if e.get('ref'):
         return e['ref']
+    if e['name'] in spec.get('skip_names', []):      # 동명이인 등으로 반영하지 않을 선수
+        return None
     hits = [p for p in d['players_index'] if p['name'] == e['name'] and (not e.get('school') or e['school'] in p['school'])]
     if not e.get('ref') and not e.get('create'):
         hits = [p for p in hits if has_tk(p['ref'])]          # 국가대표·결과표 행(tk 칩 없음) 제외
