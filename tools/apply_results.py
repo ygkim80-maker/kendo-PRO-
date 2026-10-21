@@ -18,6 +18,7 @@ spec.json 형식 (두 블록 모두 선택):
   ]
 }
   "notes": [{"name":"배성진","school":"대구대","text":"대구대 에이스 [차장님 현장정보]"}]   # note 칸에 ' · 문구' 추가(중복 시 생략)
+- spec 최상위 "skip_missing": true 이면 DB에 없거나 동명이인인 선수는 건너뛰고(중단 안 함) 마지막에 목록 출력. teams 의 팀별 "label"(시도명 등 표기)·"lookup"(DB 소속 검색어, ""이면 이름만으로 검색).
 - school 은 부분일치(제주→제주대). 동명이인/중복 행이면 "ref":["panel",섹션,행] 으로 지정.
 - 신규 선수만 등록하려면 entries 에 text 없이 {"name","school","create":{...}} 만 둔다. teams 항목의 팀별 "cls" 로 칩 색상 지정 가능(기본 yw).
 - teams 항목의 팀별 "notop": true 이면 칩을 기록으로만 남기고 TOP7 집계에서 제외(data-top="0").
@@ -32,21 +33,28 @@ dry = '--dry-run' in sys.argv
 spec = json.load(open(sys.argv[1]))
 d = json.load(open(PATH))
 panels = {p['id']: p for p in d['panels']}
-log = {'added': 0, 'replaced': 0, 'skipped': 0, 'created': []}
+log = {'added': 0, 'replaced': 0, 'skipped': 0, 'created': [], 'missing': []}
 errors = []
 
 def get_row(ref):
     return panels[ref[0]]['sections'][ref[1]]['rows'][ref[2]]
 
+def has_tk(ref):
+    return any('"tk"' in c.get('html', '') for c in get_row(ref)['cells'])
+
 def resolve(e):
     if e.get('ref'):
         return e['ref']
     hits = [p for p in d['players_index'] if p['name'] == e['name'] and (not e.get('school') or e['school'] in p['school'])]
-    if len(hits) == 1:
-        return hits[0]['ref']
-    if len(hits) > 1:
-        errors.append(f"중복: {e['name']} {[(h['school'], h['ref']) for h in hits]} → ref 지정 필요")
-        return None
+    if not e.get('ref') and not e.get('create'):
+        hits = [p for p in hits if has_tk(p['ref'])]          # 국가대표·결과표 행(tk 칩 없음) 제외
+    schools = {p['school'] for p in hits}
+    if len(schools) > 1:
+        msg = f"동명이인 의심: {e['name']} {sorted(schools)} → ref 지정 필요"
+        if spec.get('skip_missing'): log['missing'].append(msg); return None
+        errors.append(msg); return None
+    if hits:
+        return hits[0]['ref']                                  # 같은 소속 중복 행은 첫 행
     c = e.get('create')
     if c:
         sec = panels[c['panel']]['sections'][c['section']]
@@ -60,7 +68,9 @@ def resolve(e):
         d['players_index'].append({'name': e['name'], 'school': school, 'panel': c['panel'], 'section': label, 'ref': ref})
         log['created'].append(f"{e['name']}({school})")
         return ref
-    errors.append(f"선수 없음: {e['name']} / {e.get('school')} (신규면 create 지정)")
+    msg = f"선수 없음: {e['name']} / {e.get('school')}"
+    if spec.get('skip_missing'): log['missing'].append(msg); return None
+    errors.append(msg + " (신규면 create 지정)")
     return None
 
 def apply_chip(e, text):
@@ -100,12 +110,13 @@ for t in spec.get('teams', []):
     for pos, na, sa, pa, nb, sb, pb in t['bouts']:
         for me, sch, mp, op_name, op_sch, op in ((na, sa, pa, nb, sb, pb), (nb, sb, pb, na, sa, pa)):
             team = res[sch]
-            vs = res[op_sch]['school']
+            vs = res[op_sch].get('label', res[op_sch]['school'])
+            own = (team.get('label', '') + ' ') if team.get('label') else ''
             out = '무' if mp == op else ('승' if mp > op else '패')
             score = '' if out == '무' else f' {mp}:{op}'
-            text = (f"{ev} {t['stage']} {team['result']}({vs} 상대" + (f", {team['summary']}" if team.get('summary') else '') +
+            text = (f"{ev} {t['stage']} {own}{team['result']}({vs} 상대" + (f", {team['summary']}" if team.get('summary') else '') +
                     f") · {pos} {op_name}전{score} {out}")
-            e = {'name': me, 'school': sch, 'cls': team.get('cls', 'yw'), 'notop': team.get('notop'), 'replace': t.get('replace', t['stage'])}
+            e = {'name': me, 'school': team.get('lookup', sch), 'cls': team.get('cls', 'yw'), 'notop': team.get('notop'), 'replace': t.get('replace', t['stage'])}
             if team['result'] == '우승' and t.get('tag'): e['tag'] = t['tag']
             else:
                 if t.get('tag'): e['untag'] = t['tag']
@@ -144,6 +155,7 @@ before = top7_names()
 json.dump(d, open(PATH, 'w'), ensure_ascii=False, indent=1); open(PATH, 'a').write('\n')
 subprocess.run([sys.executable, os.path.join(ROOT, 'tools', 'build_top7.py'), PATH], check=True, stdout=subprocess.DEVNULL)
 after = top7_names()
+if log['missing']: print(f"미반영 {len(log['missing'])}건(DB 없음/동명이인): " + ' | '.join(sorted(set(log['missing']))))
 print(f"OK 추가 {log['added']} · 교체 {log['replaced']} · 중복생략 {log['skipped']} · 신규선수 {log['created'] or '없음'} · 선수 {len(d['players_index'])}명 · index 불일치 0")
 for k in after:
     if before.get(k) != after[k]:
